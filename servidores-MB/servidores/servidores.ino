@@ -1,72 +1,28 @@
-#include <Arduino.h>
-#include <WiFi.h>
-#include <HTTPClient.h>
-#include <ArduinoJson.h>
+//YWROBOT sda,scl 
+//Compatible with the Arduino IDE 1.0
+//Library version:1.1
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
 
-const char *ssid = "PEINE-3";          // Change this to your WiFi SSID
-const char *password = "etecPeine3";  // Change this to your WiFi password
-const char *endpoint = "http://10.56.13.13:5000/api/sensor";
+LiquidCrystal_I2C lcd(0x27,20,4);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
-void setup() {
-Serial.begin(115200);
-pinMode(34, INPUT);
-analogSetPinAttenuation(34, ADC_11db);
-// We start by connecting to a WiFi network
-Serial.println();
-Serial.println("******************************************************");
-Serial.print("Connecting to ");
-Serial.println(ssid);
-
-WiFi.begin(ssid, password);
-
-while (WiFi.status() != WL_CONNECTED) {
-delay(500);
-Serial.print(".");
-}
-
-Serial.println("");
-Serial.println("WiFi connected");
-Serial.println("IP address: ");
-Serial.println(WiFi.localIP());
-}
-
-void loop() {
-  int valorPot= analogRead(34);
-if (WiFi.status() == WL_CONNECTED){
-  HTTPClient http;
-  http.begin(endpoint);
-  http.addHeader("Content-Type", "application/json");
-
-  JsonDocument doc;
-  /*JsonArray nombres= doc["nombres"].to<JsonArray>();
-  nombres.add("Camila");
-  nombres.add("Milo");
-  */
-  doc["nombre"]= "potenciometro";
-  doc["valor"]= valorPot;
-
-  String payload;
-  serializeJson(doc, payload);
-
-  int httpCode= http.POST(payload);
-  const int OK= 200;
-  if(httpCode==OK){
-    Serial.print("Datos enviados: ");
-    Serial.println(payload);
-    String response = http.getString();
-    Serial.print("Respuesta recibida: ");
-    Serial.print(response);
-  }
-  else{
-    Serial.print("Error al conectar con el servidor: ");
-    Serial.println(httpCode);
-  }
-  http.end();
-}
-else{
-  Serial.print("Se desconectó el WiFi");
-}
-delay(5000);
+void setup()
+{
+  lcd.init();                      // initialize the lcd 
+  lcd.init();
+  // Print a message to the LCD.
+  lcd.backlight();
+  lcd.setCursor(3,0);
+  lcd.print("benja!");
+  lcd.setCursor(2,1);
+  lcd.print("vega");
+   lcd.setCursor(0,2);
+  lcd.print("Arduino LCM IIC 2004");
+   lcd.setCursor(2,3);
+  lcd.print("Power By Ec-yuan!");
 }
 
 
+void loop()
+{
+}
